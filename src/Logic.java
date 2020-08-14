@@ -1,5 +1,4 @@
 import java.util.Random;
-import java.util.Scanner;
 
 public class Logic {
     static int SIZE;
@@ -14,6 +13,9 @@ public class Logic {
     static Random random = new Random();
 
     static boolean isFinished;
+    static boolean isFinished2;
+
+    static int player;
 
     public static void go() {
         isFinished = true;
@@ -42,6 +44,36 @@ public class Logic {
         isFinished = false;
     }
 
+    public static void go2() {
+        isFinished = true;
+
+        printMap();
+        if (checkWinLines(DOT_X)) {
+            System.out.println("Игрок 1 победил!!!");
+            player = 0;
+            return;
+        }
+        if (isFull()) {
+            System.out.println("Ничья!");
+            player = 0;
+            return;
+        }
+        printMap();
+        if (checkWinLines(DOT_O)) {
+            System.out.println("Игрок 2 победил!!!");
+            player = 0;
+            return;
+        }
+        if (isFull()) {
+            System.out.println("Ничья!");
+            player = 0;
+            return;
+        }
+
+        isFinished = false;
+    }
+
+
 
     public static void initMap() {
         map = new char[SIZE][SIZE];
@@ -68,10 +100,33 @@ public class Logic {
     }
 
     public static void humanTurn(int x, int y) {
-        if(isCellValid(y, x)){
-            map[y][x] = DOT_X;
+        if (isCellValid(y,x)) {
+            map [y] [x] = DOT_X;
             go();
         }
+    }
+
+    public static void humanTurn2(int x, int y) {
+        if (player > 1) {
+            if (player % 2 != 0) {
+                if (isCellValid(y, x)) {
+                    map[y][x] = DOT_X;
+                    player++;
+                    go2();
+                }
+            }
+            if (player % 2 == 0) {
+                if (isCellValid(y, x)) {
+                    map[y][x] = DOT_O;
+                    player++;
+                    go2();
+                }
+            }
+        }
+        if (player < 2) {
+            return;
+        }
+
     }
 
 
@@ -149,6 +204,7 @@ public class Logic {
 
     static boolean checkLine(int cy, int cx, int vy, int vx, char dot) {
         return checkLine(cy, cx, vy, vx, dot, DOTS_TO_WIN);
+
     }
 
     static boolean checkWinLines(char dot) {
@@ -183,6 +239,5 @@ public class Logic {
         }
         return false;
     }
-
 
 }
